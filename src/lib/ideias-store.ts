@@ -130,6 +130,12 @@ export function useComentarios(ideiaId?: string) {
 }
 
 export async function adicionarIdeia(ideia: Omit<Ideia, "id" | "criadaEm" | "votos">) {
+  if (!ideia.categoria || !ideia.categoria.trim()) {
+    throw new Error("Categoria é obrigatória.");
+  }
+  if (!ideia.titulo || ideia.titulo.trim().length < 3) {
+    throw new Error("O título precisa ter pelo menos 3 caracteres.");
+  }
   const id = `i-${Date.now().toString(36)}`;
   const nova: Ideia = {
     ...ideia,
