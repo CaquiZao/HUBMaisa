@@ -920,21 +920,36 @@ function NovaIdeiaModal({
             onClick={() => {
               onClose();
               reset();
-            }}
-          >
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            disabled={!titulo.trim() || !cat}
-            onClick={() => {
-              onCriar(titulo.trim(), corpo.trim(), cat);
-              reset();
-            }}
-          >
-            Publicar ideia
-          </Button>
-        </>
+        <div className="flex w-full items-center justify-between">
+          <div>
+            {!cat && (
+              <span className="text-red-500 text-[13px] font-medium">
+                Selecione uma categoria para publicar
+              </span>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                onClose();
+                reset();
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              disabled={!titulo.trim() || !cat}
+              onClick={() => {
+                onCriar(titulo.trim(), corpo.trim(), cat);
+                reset();
+              }}
+            >
+              Publicar ideia
+            </Button>
+          </div>
+        </div>
       }
     >
       <div className="space-y-4">
@@ -1013,21 +1028,30 @@ function EditarIdeiaModal({
       titulo="Editar ideia"
       width={520}
       footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            disabled={!titulo.trim() || !cat}
-            onClick={() => {
-              onSalvar(ideia.id, titulo.trim(), corpo.trim(), cat, st);
-              onClose();
-            }}
-          >
-            Salvar alterações
-          </Button>
-        </>
+        <div className="flex w-full items-center justify-between">
+          <div>
+            {!cat && (
+              <span className="text-red-500 text-[13px] font-medium">
+                Selecione uma categoria para salvar
+              </span>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button variant="ghost" onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              disabled={!titulo.trim() || !cat}
+              onClick={() => {
+                onSalvar(ideia.id, titulo.trim(), corpo.trim(), cat, st);
+                onClose();
+              }}
+            >
+              Salvar alterações
+            </Button>
+          </div>
+        </div>
       }
     >
       <div className="space-y-4">
