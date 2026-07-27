@@ -926,7 +926,7 @@ function NovaIdeiaModal({
           </Button>
           <Button
             variant="primary"
-            disabled={!titulo.trim()}
+            disabled={!titulo.trim() || !cat}
             onClick={() => {
               onCriar(titulo.trim(), corpo.trim(), cat);
               reset();
@@ -1019,7 +1019,7 @@ function EditarIdeiaModal({
           </Button>
           <Button
             variant="primary"
-            disabled={!titulo.trim()}
+            disabled={!titulo.trim() || !cat}
             onClick={() => {
               onSalvar(ideia.id, titulo.trim(), corpo.trim(), cat, st);
               onClose();
