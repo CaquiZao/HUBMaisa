@@ -920,13 +920,13 @@ function NovaIdeiaModal({
       footer={
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col gap-0.5">
-            {tentouPublicar && titulo.trim().length < 3 && (
-              <span className="text-red-500 text-[13px] font-medium animate-pulse">
+            {titulo.trim().length < 3 && (
+              <span className="text-red-500 text-[13px] font-medium">
                 ⚠ O título precisa ter pelo menos 3 caracteres
               </span>
             )}
-            {tentouPublicar && !cat && (
-              <span className="text-red-500 text-[13px] font-medium animate-pulse">
+            {!cat && (
+              <span className="text-red-500 text-[13px] font-medium">
                 ⚠ Selecione uma categoria para publicar
               </span>
             )}
