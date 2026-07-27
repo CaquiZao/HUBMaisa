@@ -914,12 +914,6 @@ function NovaIdeiaModal({
       titulo="Nova ideia"
       width={520}
       footer={
-        <>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              onClose();
-              reset();
         <div className="flex w-full items-center justify-between">
           <div>
             {!cat && (
