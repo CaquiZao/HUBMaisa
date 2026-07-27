@@ -487,6 +487,10 @@ function IdeiasPage() {
             push({ titulo: "Erro", descricao: "Usuário não autenticado." });
             return;
           }
+          if (!categoria) {
+            push({ titulo: "Erro", descricao: "Selecione uma categoria antes de publicar." });
+            return;
+          }
           try {
             const nova = await adicionarIdeia({
               titulo,
@@ -891,17 +895,13 @@ function NovaIdeiaModal({
   const [titulo, setTitulo] = useState("");
   const [corpo, setCorpo] = useState("");
   const [cat, setCat] = useState<Categoria>("");
-
-  useEffect(() => {
-    if (open && categorias.length > 0 && !cat) {
-      setCat(categorias[0].id);
-    }
-  }, [open, categorias, cat]);
+  const [tentouPublicar, setTentouPublicar] = useState(false);
 
   function reset() {
     setTitulo("");
     setCorpo("");
-    setCat(categorias[0]?.id ?? "");
+    setCat("");
+    setTentouPublicar(false);
   }
 
   return (
@@ -916,9 +916,9 @@ function NovaIdeiaModal({
       footer={
         <div className="flex w-full items-center justify-between">
           <div>
-            {!cat && (
-              <span className="text-red-500 text-[13px] font-medium">
-                Selecione uma categoria para publicar
+            {tentouPublicar && !cat && (
+              <span className="text-red-500 text-[13px] font-medium animate-pulse">
+                ⚠ Selecione uma categoria para publicar
               </span>
             )}
           </div>
@@ -934,8 +934,10 @@ function NovaIdeiaModal({
             </Button>
             <Button
               variant="primary"
-              disabled={!titulo.trim() || !cat}
+              disabled={!titulo.trim()}
               onClick={() => {
+                setTentouPublicar(true);
+                if (!cat) return;
                 onCriar(titulo.trim(), corpo.trim(), cat);
                 reset();
               }}
