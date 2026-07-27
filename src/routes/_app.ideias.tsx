@@ -491,8 +491,8 @@ function IdeiasPage() {
             push({ titulo: "Erro", descricao: "Selecione uma categoria antes de publicar." });
             return;
           }
-          if (titulo.trim().length < 3) {
-            push({ titulo: "Erro", descricao: "O título precisa ter pelo menos 3 caracteres." });
+          if (!titulo.trim()) {
+            push({ titulo: "Erro", descricao: "O título é obrigatório." });
             return;
           }
           try {
