@@ -491,7 +491,7 @@ function IdeiasPage() {
             const nova = await adicionarIdeia({
               titulo,
               corpo,
-              categoria: categoria || "geral",
+              categoria,
               tags: [],
               autorId: USUARIO_ATUAL,
               status: "nova",
@@ -887,14 +887,21 @@ function NovaIdeiaModal({
   onClose: () => void;
   onCriar: (titulo: string, corpo: string, cat: Categoria) => void;
 }) {
+  const categorias = useCategorias();
   const [titulo, setTitulo] = useState("");
   const [corpo, setCorpo] = useState("");
-  const [cat, setCat] = useState<Categoria>("geral");
+  const [cat, setCat] = useState<Categoria>("");
+
+  useEffect(() => {
+    if (open && categorias.length > 0 && !cat) {
+      setCat(categorias[0].id);
+    }
+  }, [open, categorias, cat]);
 
   function reset() {
     setTitulo("");
     setCorpo("");
-    setCat("geral");
+    setCat(categorias[0]?.id ?? "");
   }
 
   return (
@@ -974,16 +981,17 @@ function EditarIdeiaModal({
     status: StatusIdeia,
   ) => void;
 }) {
+  const categorias = useCategorias();
   const [titulo, setTitulo] = useState(ideia?.titulo ?? "");
   const [corpo, setCorpo] = useState(ideia?.corpo ?? "");
-  const [cat, setCat] = useState<Categoria>(ideia?.categoria || "geral");
+  const [cat, setCat] = useState<Categoria>(ideia?.categoria || "");
   const [st, setSt] = useState<StatusIdeia>("nova");
 
   useEffect(() => {
     if (ideia) {
       setTitulo(ideia.titulo);
       setCorpo(ideia.corpo);
-      setCat(ideia.categoria || "geral");
+      setCat(ideia.categoria || (categorias[0]?.id ?? ""));
       const mapped =
         ideia.status === "aberta"
           ? "nova"
