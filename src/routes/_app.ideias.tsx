@@ -487,17 +487,21 @@ function IdeiasPage() {
             push({ titulo: "Erro", descricao: "Usuário não autenticado." });
             return;
           }
-          const nova = await adicionarIdeia({
-            titulo,
-            corpo,
-            categoria,
-            tags: [],
-            autorId: USUARIO_ATUAL,
-            status: "nova",
-          });
-          setNovaAberta(false);
-          abrir(nova.id);
-          push({ titulo: "Ideia criada", descricao: titulo });
+          try {
+            const nova = await adicionarIdeia({
+              titulo,
+              corpo,
+              categoria,
+              tags: [],
+              autorId: USUARIO_ATUAL,
+              status: "nova",
+            });
+            setNovaAberta(false);
+            abrir(nova.id);
+            push({ titulo: "Ideia criada", descricao: titulo });
+          } catch (err: any) {
+            push({ titulo: "Erro ao criar", descricao: err.message || "Tente novamente." });
+          }
         }}
       />
 
@@ -883,14 +887,21 @@ function NovaIdeiaModal({
   onClose: () => void;
   onCriar: (titulo: string, corpo: string, cat: Categoria) => void;
 }) {
+  const categorias = useCategorias();
   const [titulo, setTitulo] = useState("");
   const [corpo, setCorpo] = useState("");
-  const [cat, setCat] = useState<Categoria>("produto");
+  const [cat, setCat] = useState<Categoria>("");
+
+  useEffect(() => {
+    if (open && categorias.length > 0 && !cat) {
+      setCat(categorias[0].id);
+    }
+  }, [open, categorias, cat]);
 
   function reset() {
     setTitulo("");
     setCorpo("");
-    setCat("produto");
+    setCat(categorias[0]?.id ?? "");
   }
 
   return (
@@ -970,16 +981,17 @@ function EditarIdeiaModal({
     status: StatusIdeia,
   ) => void;
 }) {
+  const categorias = useCategorias();
   const [titulo, setTitulo] = useState(ideia?.titulo ?? "");
   const [corpo, setCorpo] = useState(ideia?.corpo ?? "");
-  const [cat, setCat] = useState<Categoria>(ideia?.categoria ?? "produto");
+  const [cat, setCat] = useState<Categoria>(ideia?.categoria ?? "");
   const [st, setSt] = useState<StatusIdeia>("nova");
 
   useEffect(() => {
     if (ideia) {
       setTitulo(ideia.titulo);
       setCorpo(ideia.corpo);
-      setCat(ideia.categoria);
+      setCat(ideia.categoria || (categorias[0]?.id ?? ""));
       const mapped =
         ideia.status === "aberta"
           ? "nova"

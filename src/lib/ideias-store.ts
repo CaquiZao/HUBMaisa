@@ -140,7 +140,14 @@ export async function adicionarIdeia(ideia: Omit<Ideia, "id" | "criadaEm" | "vot
   ideiasEstado = [nova, ...ideiasEstado];
   for (const l of ideiasListeners) l();
 
-  await supabase.from("ideias").insert(nova);
+  const { error } = await supabase.from("ideias").insert(nova);
+  if (error) {
+    console.error("Erro ao salvar ideia no Supabase:", error);
+    // Reverter otimismo se falhar?
+    ideiasEstado = ideiasEstado.filter(i => i.id !== id);
+    for (const l of ideiasListeners) l();
+    throw new Error(`Falha ao salvar ideia: ${error.message}`);
+  }
   return nova;
 }
 
