@@ -920,9 +920,9 @@ function NovaIdeiaModal({
       footer={
         <div className="flex w-full items-center justify-between">
           <div className="flex flex-col gap-0.5">
-            {titulo.trim().length < 3 && (
+            {!titulo.trim() && (
               <span className="text-red-500 text-[13px] font-medium">
-                ⚠ O título precisa ter pelo menos 3 caracteres
+                ⚠ O título é obrigatório
               </span>
             )}
             {!cat && (
@@ -943,10 +943,10 @@ function NovaIdeiaModal({
             </Button>
             <Button
               variant="primary"
-              disabled={titulo.trim().length < 3 || !cat}
+              disabled={!titulo.trim() || !cat}
               onClick={() => {
                 setTentouPublicar(true);
-                if (titulo.trim().length < 3 || !cat) return;
+                if (!titulo.trim() || !cat) return;
                 onCriar(titulo.trim(), corpo.trim(), cat);
                 reset();
               }}
