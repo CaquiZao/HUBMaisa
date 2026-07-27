@@ -45,7 +45,7 @@ async function carregarIdeiasEComentarios() {
     .from("ideias")
     .select("*")
     .order("criadaEm", { ascending: false });
-    
+
   if (errorIdeias) {
     console.error("Erro ao carregar ideias:", errorIdeias);
   } else if (ideiasData && ideiasData.length > 0) {
@@ -57,7 +57,7 @@ async function carregarIdeiasEComentarios() {
     .from("comentarios")
     .select("*")
     .order("criadoEm", { ascending: true });
-    
+
   if (errorCom) {
     console.error("Erro ao carregar comentários:", errorCom);
   } else if (comData && comData.length > 0) {
@@ -122,7 +122,7 @@ export function useComentarios(ideiaId?: string) {
       }
     }
   }, []);
-  
+
   if (ideiaId) {
     return list.filter((c) => c.ideiaId === ideiaId);
   }
@@ -170,17 +170,17 @@ export async function adicionarComentario(ideiaId: string, autorId: string, corp
 export async function toggleVotoIdeia(ideiaId: string, autorId: string) {
   const target = ideiasEstado.find(i => i.id === ideiaId);
   if (!target) return;
-  
+
   let newVotos = [...(target.votos || [])];
   if (newVotos.includes(autorId)) {
     newVotos = newVotos.filter(id => id !== autorId);
   } else {
     newVotos.push(autorId);
   }
-  
+
   ideiasEstado = ideiasEstado.map(i => i.id === ideiaId ? { ...i, votos: newVotos } : i);
   for (const l of ideiasListeners) l();
-  
+
   await supabase.from("ideias").update({ votos: newVotos }).eq("id", ideiaId);
 }
 

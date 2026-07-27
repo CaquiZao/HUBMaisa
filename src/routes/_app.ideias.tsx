@@ -491,6 +491,10 @@ function IdeiasPage() {
             push({ titulo: "Erro", descricao: "Selecione uma categoria antes de publicar." });
             return;
           }
+          if (titulo.trim().length < 3) {
+            push({ titulo: "Erro", descricao: "O título precisa ter pelo menos 3 caracteres." });
+            return;
+          }
           try {
             const nova = await adicionarIdeia({
               titulo,
@@ -915,7 +919,12 @@ function NovaIdeiaModal({
       width={520}
       footer={
         <div className="flex w-full items-center justify-between">
-          <div>
+          <div className="flex flex-col gap-0.5">
+            {tentouPublicar && titulo.trim().length < 3 && (
+              <span className="text-red-500 text-[13px] font-medium animate-pulse">
+                ⚠ O título precisa ter pelo menos 3 caracteres
+              </span>
+            )}
             {tentouPublicar && !cat && (
               <span className="text-red-500 text-[13px] font-medium animate-pulse">
                 ⚠ Selecione uma categoria para publicar
@@ -934,10 +943,10 @@ function NovaIdeiaModal({
             </Button>
             <Button
               variant="primary"
-              disabled={!titulo.trim()}
+              disabled={titulo.trim().length < 3 || !cat}
               onClick={() => {
                 setTentouPublicar(true);
-                if (!cat) return;
+                if (titulo.trim().length < 3 || !cat) return;
                 onCriar(titulo.trim(), corpo.trim(), cat);
                 reset();
               }}
